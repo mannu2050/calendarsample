@@ -62,6 +62,7 @@ Office 365 Graph API is a great way to start building application for Office but
 > > **Password:** xxxxxxxx
 > 
 > This will fill up the token in OAuth Token textbox.
+
 > **Step-6(b):** Now specify details for calendar block then click on Create Calendar. This should open up processing popup then
 > confirmation popup.
 
