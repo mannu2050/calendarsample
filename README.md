@@ -24,7 +24,7 @@ Office 365 Graph API is a great way to start building application for Office but
 			`https://profile.microsoft.com/RegSysProfileCenter/wizardnp.aspx?wizid=14b845d0-938c-45af-b061-f798fbb4d170&lcid=1033`
 
 	Then check your outlook email account created on Step-2 and signup through the link mentioned in email, following is the highlight:
-![Screenshot from email](https://onedrive.live.com/redir?resid=61890B57ABBCAD1A!43793&authkey=!AHfsI33-419nOVI&v=3&ithint=photo,jpg "Screenshot from email")
+![Screenshot from email](https://lz20fa-sn3301.files.1drv.com/y3mSr3WVVqGDTMpJtewPJlOeOb1fcwtcVxftDybkwPW15e9b5f2OmLeutDBo-Nh7fNF_cqjyt_aPesNsBQ5TU8K3FC1J9w3qAR2hlwg2P6qILVov0OvmRumVvmqYIUaTATjnUr2lxaD5yolBc8sPoT37JjwVLBnultdEJoNlcxkDIk?width=567&height=155&cropmode=none "Screenshot from email")
 
 > Now you will get the credentials looks like the following:
 	  	**ID:** xxx@yourcompany.onmicrosoft.com
