@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>O365 Calendar Integration Sample</title>
+    <style>
+        body {
+            font-family: 'Segoe UI';
+        }
+        
+        .paddedElement {
+            margin-top: 5px;
+        }
+        
+        .hidden {
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>O365 Calendar integration Sample</h2>
+    <label for="TxtOauthToken">OAuth Token: </label><input type="text" id="TxtOauthToken" size="80" />
+    <br />
+    <input type="button" class="paddedElement" id="getToken" value="Get Token" />
+    <br />
+    <label for="subject">Subject: </label><input type="text" id="subject" size="80" value="Discuss the Calendar REST API"
+    />
+    <br />
+    <label for="content">Content: </label><input type="text" id="content" size="80" value="I think it will meet our requirements!"
+    />
+    <br />
+
+    <label for="startdatetime">StartDateTime: </label><input type="text" id="startdatetime" size="80" value="2016-05-18T18:00:00"
+    />
+    <br/>
+    <label for="enddatetime">EndDateTime: </label><input type="text" id="enddatetime" size="80" value="2016-05-18T19:00:00"
+    />
+    <br />
+    <label for="attendee">Attendee Name: </label><input type="text" id="attendeename" size="80" value="Manish Sharma" />
+    <br />
+    <label for="enddatetime">Attendee Email: </label><input type="text" id="attendeeemail" size="80" value="manish.sharma@microsoft.com"
+    />
+    <br /> 
+    <input type="button" id="createcalendar" class="paddedElement" value="Create calendar" visibility="hidden" />
+    <br />
+    <br />
+    <label for="results" class="hidden paddedElement" id="resultHeading">Results: </label>
+    <br />
+    <label id="debugMessage"></label>
+    <pre id="results"></pre>
+    <script type="text/javascript">
+        (function (window) {
+        
+        function CreateEvent() {
+          
+                try
+                {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "https://outlook.office.com/api/v2.0/me/events");
+                    console.log(token);
+                    xhr.setRequestHeader("authorization", "Bearer " + token);
+                    xhr.setRequestHeader("accept", "application/json");
+                    xhr.setRequestHeader("Content-Type", "application/json")
+                    var mydata = "{\"Subject\": \"" + subject.value + "\",\"Body\": {" +
+                        "\"ContentType\": \"HTML\","+
+                        "\"Content\": \"" + content.value +"\"},"+
+  "\"Start\": {"+
+                        "\"DateTime\": \"" + startdatetime.value + "\"," +
+                       "\"TimeZone\": \"Pacific Standard Time\""+
+                    "},"+
+  "\"End\": {"+
+                        "\"DateTime\": \"" + enddatetime.value + "\"," +
+                        "\"TimeZone\": \"Pacific Standard Time\""+
+                    "},"+
+  "\"Attendees\": ["+
+    "{"+
+        "\"EmailAddress\": {"+
+            "\"Address\": \"" + attendeeemail.value + "\"," +
+            "\"Name\": \"" + attendeename.value+ "\"" +
+        "},"+
+        "\"Type\": \"Required\""+
+    "}"+
+                    "]"+
+                "}";
+                    console.log(mydata);
+                    xhr.onload = function () {
+                        // CORS is working.
+                        console.log(xhr.toString());
+                    }
+                    
+                    xhr.send(mydata);
+                    alert("processing");
+                    if (xhr.status == "201") {
+                        alert('Calendar created from ' + startdatetime.value + ' to ' + enddatetime.value + ' & added attendee ' + attendeeemail.value)
+                    }
+                }
+                catch (e)
+                {
+                    if (e.number == -2147024891)
+                    {
+                        console.log("Internet Explorer users must use Internet Explorer 11 with MS15-032: Cumulative security update for Internet Explorer (KB3038314) installed for this sample to work.");
+                    }
+                    else
+                    {
+                        console.log("An unexpected error occurred. Please refresh the page.");
+                    }
+
+                }
+        }
+        var urlParameterExtraction = new (function () {
+          function splitQueryString(queryStringFormattedString) {
+            var split = queryStringFormattedString.split('&');
+
+            // If there are no parameters in URL, do nothing.
+            if (split == "") {
+              return {};
+            }
+
+            var results = {};
+
+            // If there are parameters in URL, extract key/value pairs.
+            for (var i = 0; i < split.length; ++i) {
+              var p = split[i].split('=', 2);
+              if (p.length == 1)
+                results[p[0]] = "";
+              else
+                results[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+            }
+
+            return results;
+          }
+
+          // Split the query string (after removing preceding '#').
+          this.queryStringParameters = splitQueryString(window.location.hash.substr(1));
+        })();
+
+        var token = urlParameterExtraction.queryStringParameters['access_token'];
+
+        if (token == undefined) {
+          document.getElementById("TxtOauthToken").value = "Click \"Get Token\" to trigger sign-in after entering the endpoint you want to use.";
+
+          document.getElementById("createcalendar").style.visibility = "hidden";
+        }
+        else {
+          document.getElementById("TxtOauthToken").value = token;
+          document.getElementById("createcalendar").style.visibility = "visible";
+          document.getElementById("getToken").style.display = "none";
+        }
+
+        // Constructs the authentication URL and directs the user to it.
+        function requestToken() {
+          // Change clientId and replyUrl to reflect your app's values
+          // found on the Configure tab in the Azure Management Portal.
+            var clientId = 'bcdc85ec-79dc-4a59-af5a-28b535f28aba';//'3eb842bd-2409-427b-bb10-febf64c55bc7';
+            var replyUrl = 'http://localhost:34224/Hello/calendarsample.html';
+            var resource = " https://outlook.office.com";
+
+          var authServer  = 'https://login.windows.net/common/oauth2/authorize?';
+         
+          var responseType = 'token';
+
+          var url = authServer +
+                    "response_type=" + encodeURI(responseType) + "&" +
+                    "client_id=" + encodeURI(clientId) + "&" +
+                    "resource=" + encodeURI(resource) + "&" +
+                    "redirect_uri=" + encodeURI(replyUrl);
+
+          window.location = url;
+        }
+
+        document.getElementById("getToken").onclick = requestToken;
+        document.getElementById("createcalendar").onclick = CreateEvent;
+        function getEndpointUrl() {
+          return document.getElementById("endpoint").value;
+        }
+
+        
+        
+      })(window);
+    </script>
+</body>
+
+</html>
