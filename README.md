@@ -55,7 +55,7 @@ Office 365 Graph API is a great way to start building application for Office but
 > 
 > 
 
-**Step-6:** Run the sample enclosed sample under http://localhost:34224/Hello/calendarsample.html which is specified under Reply to URL while registering application in step-5(a).
+**Step-6:** Run the calendarsample.html under http://localhost:34224/Hello/calendarsample.html which is specified under Reply to URL while registering application in step-5(a).
 
 > **Step-6(a):** Click on Get Token to authorize specify the following credentials in login page
 > > **ID:** xxx@yourcompany.onmicrosoft.com 		
